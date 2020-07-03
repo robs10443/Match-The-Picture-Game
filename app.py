@@ -30,7 +30,7 @@ while running_starting_window:
     current_event = event.get()
     x = gc.SCREEN_SIZE // 2 - 60
     y = gc.SCREEN_SIZE // 2 - 10
-    display_message('START',(7,252,3),x,y,60)
+    left_top_x,left_top_y,right_bottom_x,right_bottom_y = display_message('START',(7,252,3),x,y,60)
     for e in current_event:
         if e.type == pygame.QUIT:
             exit()
@@ -38,14 +38,23 @@ while running_starting_window:
         
         if e.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-
-            if mouse_x >= x and mouse_y >= y and mouse_x <= x + 133 and mouse_y <= y + 42 :
+            display_message('START',(7,252,3),x,y,60)
+            if mouse_x >= x and mouse_y >= y and mouse_x <= x + right_bottom_x and mouse_y <= y + right_bottom_y :
                 running_starting_window = False
     display.flip()
 
 matched = image.load('Other_Assets/matched.png')
 
 tiles = [Animal(i) for i in range(0,gc.NUM_TILES_TOTAL)]
+
+screen.fill((255,255,255))
+
+for tile in tiles:
+    screen.blit(tile.image,(tile.row*gc.IMAGE_SIZE + gc.MARGIN,tile.col*gc.IMAGE_SIZE + gc.MARGIN))
+
+display.flip()
+
+pygame.time.wait(2000)
 
 current_image_index = []
 
@@ -97,7 +106,7 @@ while running:
 
     display.flip()
     if flag_for_delay == True:
-        pygame.time.wait(1000)
+        pygame.time.wait(100)
         flag_for_delay = False
     
     if num_of_skips == gc.NUM_TILES_TOTAL:
