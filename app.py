@@ -6,26 +6,54 @@ from pygame import display, event, image
 
 pygame.init()
 
+display.set_caption('Matching Pictures')
+
+screen = display.set_mode((512, 512))
+
 def find_index(x,y):
     row = x // gc.IMAGE_SIZE
     col = y // gc.IMAGE_SIZE
     return row*gc.NUM_TILES_SIDE + col
 
-display.set_caption('Matching Pictures')
 
-screen = display.set_mode((512, 512))
+def display_message(msg,color,x,y,size):
+    font = pygame.font.SysFont(None,size)
+    screen_text = font.render(msg,True,color)
+    screen.blit(screen_text,(x,y))
+    return screen_text.get_rect()
+
+running_starting_window = True
+
+screen.fill((255,255,255))
+
+while running_starting_window:
+    current_event = event.get()
+    x = gc.SCREEN_SIZE // 2 - 60
+    y = gc.SCREEN_SIZE // 2 - 10
+    display_message('START',(7,252,3),x,y,60)
+    for e in current_event:
+        if e.type == pygame.QUIT:
+            exit()
+            running_starting_window = False
+        
+        if e.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+
+            if mouse_x >= x and mouse_y >= y and mouse_x <= x + 133 and mouse_y <= y + 42 :
+                running_starting_window = False
+    display.flip()
 
 matched = image.load('Other_Assets/matched.png')
 
 tiles = [Animal(i) for i in range(0,gc.NUM_TILES_TOTAL)]
-
-running = True
 
 current_image_index = []
 
 flag_for_delay = False
 
 num_of_skips = 0
+
+running = True
 
 while running: 
     current_event = event.get()
@@ -74,5 +102,6 @@ while running:
     
     if num_of_skips == gc.NUM_TILES_TOTAL:
         running = False
-    
+
+
 print ("Good Bye")
